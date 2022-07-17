@@ -85,3 +85,5 @@ gradlew*
 # ignore temp file dir
 /temp_file
 
+/code
+/log

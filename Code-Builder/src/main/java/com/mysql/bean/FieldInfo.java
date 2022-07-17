@@ -1,0 +1,43 @@
+package com.mysql.bean;
+
+import lombok.Data;
+
+/**
+ * ******************************
+ * author：      davis
+ * createTime:   2020/1/9 17:08
+ * description:  FieldInfo 字段信息
+ * version:      V1.0
+ * ******************************
+ */
+@Data
+public class FieldInfo {
+
+    /**
+     * 字段名
+     */
+    private String columnName;
+
+    /**
+     * Model名
+     */
+    private String fieldName;
+
+    /**
+     * 所属类
+     */
+    private String fieldClass;
+
+    /**
+     * 字段注释
+     */
+    private String fieldComment;
+
+    // ***************************** 以下内容作为表结构文件映射内容
+
+    private String  dataType;
+
+    private String  maxLength;
+
+    private String  nullAble;
+}

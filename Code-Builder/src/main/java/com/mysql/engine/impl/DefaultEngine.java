@@ -164,6 +164,12 @@ public final class DefaultEngine extends AbstractEngine {
     }
 
     @Override
+    public void genApiDoc(ClassInfo classInfo) {
+        genClass(classInfo, "code-generator/markdown-file/DataMd.ftl", "docs", ".md");
+
+    }
+
+    @Override
     public void genConfig() {
         // 构建文件地址
         String path = config.getPackageName().replace(".", SPACER);

@@ -59,4 +59,10 @@ public interface GeneralEngine {
      * 生成配置文件(包括pom.xml,application.yml,application.properties)
      */
     void genConfig();
+
+    /**
+     * 生成接口文件
+     * @param classInfo
+     */
+    void genApiDoc(ClassInfo classInfo);
 }

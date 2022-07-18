@@ -48,8 +48,8 @@ public abstract class AbstractEngine implements GeneralEngine {
 
     @Override
     public void execute() {
-        List<ClassInfo> classInfos = ClassInfoFactory.getClassInfoList();
-        for (ClassInfo classInfo : classInfos) {
+        List<ClassInfo> classInfoList = ClassInfoFactory.getClassInfoList();
+        for (ClassInfo classInfo : classInfoList) {
             genEntity(classInfo);
             genRepositoryXml(classInfo);
             genRepositoryClass(classInfo);
@@ -59,6 +59,7 @@ public abstract class AbstractEngine implements GeneralEngine {
             genService(classInfo);
 //            genConfig();
 //            genFix();
+            genApiDoc(classInfo);
         }
 
         logger.info(GlobleConfig.getGlobleConfig().getProjectName() + " Build Complete.");

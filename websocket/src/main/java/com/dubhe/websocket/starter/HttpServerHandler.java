@@ -1,4 +1,4 @@
-package com.dubhe.websocket;
+package com.dubhe.websocket.starter;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -7,26 +7,33 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 @ChannelHandler.Sharable
 public class HttpServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private static Logger log = LoggerFactory.getLogger(HttpServerHandler.class);
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest req) throws Exception {
-        System.out.println("我开始连接啦");
+        log.info("start connecting from: {}", req.uri());
+
         String uri = req.uri();
-        // 构造握手响应返回，本机测试
-        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-                "ws://" + req.headers().get(HttpHeaderNames.HOST) + uri,
-                null, false);
+
+        String wsUrl = "ws://" + req.headers().get(HttpHeaderNames.HOST) + uri;
+
+        // build handshakes
+        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(wsUrl, null, false);
         WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx
                     .channel());
         } else {
             handshaker.handshake(ctx.channel(), req);
-            ChannelSupervise.addChannel("11111", ctx.channel());
         }
+        // add channel into local map
+        ChannelSupervise.addChannel(ChannelConst.CHANNEL_KEY, ctx.channel());
     }
 }

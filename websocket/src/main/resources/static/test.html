@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>java的架构师技术栈</title>
+    <title>websocket test page</title>
     <script type="text/javascript">
          var socket;
          if(!window.WebSocket){
@@ -17,21 +17,21 @@
              };
              socket.onopen = function(event){
                  var ta = document.getElementById('responseText');
-                 ta.value = "已连接";
+                 ta.value = "connected";
              };
              socket.onclose = function(event){
                  var ta = document.getElementById('responseText');
-                 ta.value = "已关闭";
+                 ta.value = "closed";
              };
          }else{
-             alert("您的浏览器不支持WebSocket协议！");
+             alert("your browser does not support websocket!");
          }
          function send(message){
              if(!window.WebSocket){return;}
              if(socket.readyState == WebSocket.OPEN){
                  socket.send(message);
              }else{
-                 alert("WebSocket 连接没有建立成功！");
+                 alert("WebSocket does not establish successfully！");
              }
          }
      </script>
@@ -39,12 +39,12 @@
 <body>
 <form onSubmit="return false;">
     <hr color="black" />
-    <h3>客户端发送的信息</h3>
-    <label>名字</label><input type="text" name="uid" value="java的架构师技术栈" /> <br />
-    <label>内容</label><input type="text" name="message" value="hello 我是冯冬冬" /> <br />
-    <br /> <input type="button" value="点击发送" onClick="send(this.form.uid.value+':'+this.form.message.value)" />
+    <h3>client message</h3>
+    <label>name</label><input type="text" name="uid" value="davis" /> <br />
+    <label>text</label><input type="text" name="message" value="hello, I am davis." /> <br />
+    <br /> <input type="button" value="send" onClick="send(this.form.uid.value+':'+this.form.message.value)" />
     <hr color="black" />
-    <h3>服务端返回的应答消息</h3>
+    <h3>response message</h3>
     <textarea id="responseText" style="width: 900px;height: 300px;"></textarea>
 </form>
 </body>

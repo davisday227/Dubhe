@@ -1,4 +1,4 @@
-package com.dubhe.websocket;
+package com.dubhe.websocket.starter;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;

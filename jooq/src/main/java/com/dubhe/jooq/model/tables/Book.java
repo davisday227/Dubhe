@@ -61,7 +61,7 @@ public class Book extends TableImpl<BookRecord> {
     /**
      * The column <code>jooq.book.author</code>.
      */
-    public final TableField<BookRecord, String> AUTHOR = createField(DSL.name("author"), SQLDataType.VARCHAR(32), this, "");
+    public final TableField<BookRecord, Integer> AUTHOR = createField(DSL.name("author"), SQLDataType.INTEGER, this, "");
 
     private Book(Name alias, Table<BookRecord> aliased) {
         this(alias, aliased, null);
@@ -147,7 +147,7 @@ public class Book extends TableImpl<BookRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, String, String> fieldsRow() {
+    public Row3<Integer, String, Integer> fieldsRow() {
         return (Row3) super.fieldsRow();
     }
 }

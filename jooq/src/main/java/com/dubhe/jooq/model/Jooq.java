@@ -3,11 +3,13 @@
  */
 package com.dubhe.jooq.model;
 
+
+import com.dubhe.jooq.model.tables.Author;
+import com.dubhe.jooq.model.tables.Book;
+
 import java.util.Arrays;
 import java.util.List;
 
-import com.dubhe.jooq.model.tables.Book;
-import com.dubhe.jooq.model.tables.Customer;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
@@ -27,14 +29,14 @@ public class Jooq extends SchemaImpl {
     public static final Jooq JOOQ = new Jooq();
 
     /**
+     * The table <code>jooq.author</code>.
+     */
+    public final Author AUTHOR = Author.AUTHOR;
+
+    /**
      * The table <code>jooq.book</code>.
      */
     public final Book BOOK = Book.BOOK;
-
-    /**
-     * The table <code>jooq.customer</code>.
-     */
-    public final Customer CUSTOMER = Customer.CUSTOMER;
 
     /**
      * No further instances allowed
@@ -52,7 +54,7 @@ public class Jooq extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            Book.BOOK,
-            Customer.CUSTOMER);
+            Author.AUTHOR,
+            Book.BOOK);
     }
 }

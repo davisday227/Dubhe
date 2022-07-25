@@ -82,10 +82,10 @@
 								</generate>
 								<target>
 									<packageName>
-										com.jooq.jooq.model
+										com.dubhe.jooq.model
 									</packageName>
 									<directory>
-										target/generated-sources/jooq
+										src/main/java
 									</directory>
 								</target>
 							</generator>

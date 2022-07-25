@@ -17,7 +17,7 @@ public class Book implements Serializable {
 
     private Integer id;
     private String  name;
-    private String  author;
+    private Integer author;
 
     public Book() {}
 
@@ -30,7 +30,7 @@ public class Book implements Serializable {
     public Book(
         Integer id,
         String  name,
-        String  author
+        Integer author
     ) {
         this.id = id;
         this.name = name;
@@ -70,14 +70,14 @@ public class Book implements Serializable {
     /**
      * Getter for <code>jooq.book.author</code>.
      */
-    public String getAuthor() {
+    public Integer getAuthor() {
         return this.author;
     }
 
     /**
      * Setter for <code>jooq.book.author</code>.
      */
-    public Book setAuthor(String author) {
+    public Book setAuthor(Integer author) {
         this.author = author;
         return this;
     }

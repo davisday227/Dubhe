@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS gateway_define;
+
+CREATE TABLE gateway_define (
+  id varchar(24)  PRIMARY KEY,
+  uri VARCHAR(250) NOT NULL,
+  predicates VARCHAR(250) NOT NULL,
+  filters VARCHAR(250) DEFAULT NULL
+);
+
+insert into gateway_define (id, uri, predicates) values ('url-proxy-1', 'http://localhost:9000', 'Path:/users/**');

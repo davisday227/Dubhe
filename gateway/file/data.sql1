@@ -1,0 +1,1 @@
+insert into gateway_define (id, uri, predicates) values ('url-proxy-1', 'http://localhost:9000', 'Path:/users/**');

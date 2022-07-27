@@ -1,16 +1,13 @@
 package com.panerai.gateway.filter;
 
-import com.panerai.gateway.infra.FilterRequestResponseUtil;
-import io.netty.buffer.ByteBufAllocator;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.NettyDataBufferFactory;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
@@ -29,43 +26,41 @@ public class CacheFilter implements Ordered, GlobalFilter {
     ServerHttpRequest serverHttpRequest = exchange.getRequest();
     HttpMethod method = serverHttpRequest.getMethod();
     if (method == HttpMethod.POST) {
-      String bodyStr = FilterRequestResponseUtil.resolveBodyFromRequest(
-          serverHttpRequest.getBody());
 
-      // 处理bodyStr
-      log.info("get body: {}", bodyStr);
+      return DataBufferUtils.join(exchange.getRequest().getBody())
+          .flatMap(dataBuffer -> {
+            byte[] bytes = new byte[dataBuffer.readableByteCount()];
+            dataBuffer.read(bytes);
+            try {
+              String bodyString = new String(bytes, "utf-8");
+              log.info(bodyString);//打印请求参数
+            } catch (UnsupportedEncodingException e) {
+              e.printStackTrace();
+            }
 
-      // 再次封装request
-      ServerHttpRequest request = buildServerHttpRequest(serverHttpRequest, bodyStr);
+            DataBufferUtils.release(dataBuffer);
+            ServerHttpRequest mutatedRequest = buildServerHttpRequest(exchange, bytes);
+            return chain.filter(exchange.mutate().request(mutatedRequest).build());
+          });
 
-      return chain.filter(exchange.mutate().request(request).build());
     } else {
       return chain.filter(exchange);
     }
   }
 
-  private ServerHttpRequest buildServerHttpRequest(ServerHttpRequest request, String bodyStr) {
-    URI uri = request.getURI();
-    ServerHttpRequest newRequest = request.mutate().uri(uri).build();
-    DataBuffer bodyDataBuffer = stringBuffer(bodyStr);
-    Flux<DataBuffer> bodyFlux = Flux.just(bodyDataBuffer);
-    newRequest = new ServerHttpRequestDecorator(newRequest) {
+  private ServerHttpRequest buildServerHttpRequest(ServerWebExchange exchange, byte[] bytes) {
+    Flux<DataBuffer> cachedFlux = Flux.defer(() -> {
+      DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+      return Mono.just(buffer);
+    });
+
+    ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(exchange.getRequest()) {
       @Override
       public Flux<DataBuffer> getBody() {
-        return bodyFlux;
+        return cachedFlux;
       }
     };
-    return newRequest;
-  }
-
-  private DataBuffer stringBuffer(String value) {
-    byte[] bytes = value.getBytes(StandardCharsets.UTF_8);
-
-    NettyDataBufferFactory nettyDataBufferFactory = new NettyDataBufferFactory(
-        ByteBufAllocator.DEFAULT);
-    DataBuffer buffer = nettyDataBufferFactory.allocateBuffer(bytes.length);
-    buffer.write(bytes);
-    return buffer;
+    return mutatedRequest;
   }
 
   @Override

@@ -19,7 +19,7 @@ public class BookService {
     @Autowired
     DSLContext dslContext;
 
-    public List<Book> getAuthors() {
+    public List<Book> getBooks() {
         return dslContext.select(Tables.BOOK.ID, Tables.BOOK.NAME, Tables.AUTHOR.NAME.as(Tables.BOOK.AUTHOR))
                 .from(Tables.BOOK)
                 .join(Tables.AUTHOR)
@@ -41,6 +41,5 @@ public class BookService {
         dslContext.insertInto(Tables.BOOK, Tables.BOOK.NAME, Tables.BOOK.AUTHOR)
                 .values(book.getName(), book.getAuthor())
                 .execute();
-        throw new RuntimeException("something wrong");
     }
 }

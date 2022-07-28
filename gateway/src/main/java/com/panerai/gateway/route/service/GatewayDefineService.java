@@ -1,7 +1,12 @@
 package com.panerai.gateway.route.service;
 
+import static org.springframework.cloud.gateway.support.RouteMetadataUtils.CONNECT_TIMEOUT_ATTR;
+import static org.springframework.cloud.gateway.support.RouteMetadataUtils.RESPONSE_TIMEOUT_ATTR;
+
 import com.panerai.gateway.route.entity.GatewayDefine;
 import com.panerai.gateway.route.repository.GatewayDefineRepository;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
@@ -48,6 +53,15 @@ public class GatewayDefineService implements ApplicationEventPublisherAware {
                 List<PredicateDefinition> predicateDefinitions = define.getPredicateDefinition();
                 if (CollectionUtils.isEmpty(predicateDefinitions)) {
                     throw new RuntimeException("predicate must not be empty");
+                }
+
+                Map<String, Object> timeoutMap = new HashMap<>();
+                timeoutMap.put(RESPONSE_TIMEOUT_ATTR, define.getTimeout() * 1000);
+                timeoutMap.put(CONNECT_TIMEOUT_ATTR, define.getTimeout() * 1000);
+                definition.setMetadata(timeoutMap);
+                PredicateDefinition methodPredicate = define.buildMethodPredicate();
+                if (methodPredicate != null) {
+                    predicateDefinitions.add(methodPredicate);
                 }
                 definition.setPredicates(predicateDefinitions);
                 List<FilterDefinition> filterDefinitions = define.getFilterDefinition();

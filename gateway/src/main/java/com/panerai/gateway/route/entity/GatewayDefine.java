@@ -18,46 +18,66 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "gateway_define")
 public class GatewayDefine {
-    @Id
-    private String id;
 
-    private String uri;
-    // 暂时定义的格式 aaaa:aaaa, bbb:bbbb; ccc:cccc, ddd: dddd
-    private String predicates;
-    private String filters;
+  @Id
+  private String id;
 
-    public List<PredicateDefinition> getPredicateDefinition() {
-        if (StringUtils.isNotBlank(this.predicates)) {
-            return Arrays.asList(this.predicates.split(";")).stream()
-                    .map(x -> buildPredicateDefinition(x))
-                    .collect(Collectors.toList());
-        } else {
-            return null;
-        }
+  private String uri;
+  // 暂时定义的格式 aaaa:aaaa, bbb:bbbb; ccc:cccc, ddd: dddd
+  private String predicates;
+  private String filters;
+  /**
+   * 超时时间，单位秒
+   */
+  private int timeout;
+
+  private String method;
+
+  public List<PredicateDefinition> getPredicateDefinition() {
+    if (StringUtils.isNotBlank(this.predicates)) {
+      return Arrays.asList(this.predicates.split(";")).stream()
+          .map(x -> buildPredicateDefinition(x))
+          .collect(Collectors.toList());
+    } else {
+      return null;
     }
+  }
 
-    public List<FilterDefinition> getFilterDefinition() {
-        if (StringUtils.isNotBlank(this.filters)) {
-            return Arrays.asList(this.filters.split(";")).stream().map(x -> buildFilter(x)).collect(Collectors.toList());
-        } else {
-            return null;
-        }
+  public List<FilterDefinition> getFilterDefinition() {
+    if (StringUtils.isNotBlank(this.filters)) {
+      return Arrays.asList(this.filters.split(";")).stream().map(x -> buildFilter(x))
+          .collect(Collectors.toList());
+    } else {
+      return null;
     }
+  }
 
-    private FilterDefinition buildFilter(String filterStr) {
-        // TODO: 2022/5/25 待实现
-        return new FilterDefinition();
-    }
+  private FilterDefinition buildFilter(String filterStr) {
+    // TODO: 2022/5/25 待实现
+    return new FilterDefinition();
+  }
 
-    private PredicateDefinition buildPredicateDefinition(String definitionStr) {
-        PredicateDefinition definition = new PredicateDefinition();
-        definition.setName("Path"); // TODO: 2022/5/25 暂时写死
-        Map<String, String> args = new HashMap<>();
-        Arrays.asList(definitionStr.split(",")).stream().forEach(x -> {
-            String[] split = x.split(":");
-            args.put(split[0], split[1]);
-        });
-        definition.setArgs(args);
-        return definition;
+  private PredicateDefinition buildPredicateDefinition(String definitionStr) {
+    PredicateDefinition definition = new PredicateDefinition();
+    definition.setName("Path"); // TODO: 2022/5/25 暂时写死
+    Map<String, String> args = new HashMap<>();
+    Arrays.asList(definitionStr.split(",")).stream().forEach(x -> {
+      String[] split = x.split(":");
+      args.put(split[0], split[1]);
+    });
+    definition.setArgs(args);
+    return definition;
+  }
+
+  public PredicateDefinition buildMethodPredicate() {
+    if (StringUtils.isNotBlank(this.getMethod())) {
+      PredicateDefinition definition = new PredicateDefinition();
+      definition.setName("Method"); // TODO: 2022/5/25 暂时写死
+      Map<String, String> args = new HashMap<>();
+      args.put("Method", this.getMethod());
+      definition.setArgs(args);
+      return definition;
     }
+    return null;
+  }
 }

@@ -102,8 +102,6 @@ public class GatewayDefineService implements ApplicationEventPublisherAware {
           log.info("delete route: {}.", route.getId());
         });
 
-//    routeDefinitionWriter.delete(Mono.just("1")).subscribe();
-
     this.publisher.publishEvent(new RefreshRoutesEvent(this));
   }
 }

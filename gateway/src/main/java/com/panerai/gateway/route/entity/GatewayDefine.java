@@ -1,5 +1,6 @@
 package com.panerai.gateway.route.entity;
 
+import io.netty.handler.codec.http.HttpConstants;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.filter.FilterDefinition;

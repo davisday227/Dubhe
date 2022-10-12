@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: monitoring-prometheus-grafana
+
+server:
+  port: 9088
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 将 Actuator 的 /actuator/prometheus 端点暴露出来
+        include: 'prometheus'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    io.github.y0ngb1n.*: debug

@@ -16,7 +16,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component
+//@Component
 public class CacheFilter implements Ordered, GlobalFilter {
 
   private static Logger log = LoggerFactory.getLogger(CacheFilter.class);

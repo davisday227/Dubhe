@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,9 @@ public class ConsumerConfigFactory {
       // topic为空，从配置中加载进来
       String topic = PropertyUtil.getString("consumer." + name + ".topic");
       String tag = PropertyUtil.getString("consumer." + name + ".tag");
+      if (StringUtils.isAnyBlank(topic, tag)) {
+        throw new IllegalStateException("无法找到mq配置，无法启动");
+      }
 
       topicTags.put(name, new ConsumerTopicTag(topic, tag));
     }
